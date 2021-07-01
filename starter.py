@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route('/api/recognize', methods=['POST'])
 def get_regonation():
-    request_data = request.form['some_text']
+    request_data = request.form['pet_type']
     imagefile = request.files.get('imagefile', '')
     image = imagefile.read()
     response = recognizer.recognize(image, request_data)

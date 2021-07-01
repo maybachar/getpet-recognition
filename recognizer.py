@@ -8,9 +8,9 @@ import cv2
 def recognize(image, kind):
     # image we got from user.
     if kind == 'dog':
-        path = r"C:\Users\מאי\Desktop\python\flask\dog_model"
+        path = r"dog_model"
     else:
-        path = r"C:\Users\מאי\Desktop\python\flask\cat_model"
+        path = r"cat_model"
     labels_path = os.path.join(path, "labels.csv")
     # read labels file.
     labels_file = pd.read_csv(labels_path)
