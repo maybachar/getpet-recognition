@@ -6,7 +6,8 @@ import cv2
 
 
 def recognize(image, kind):
-    # image we got from user.
+    sum_round = 0
+    # predict by the suitable model weights according to pet type.
     if kind == 'dog':
         path = r"dog_model"
     else:
@@ -14,7 +15,7 @@ def recognize(image, kind):
     labels_path = os.path.join(path, "labels.csv")
     # read labels file.
     labels_file = pd.read_csv(labels_path)
-    # Get all uniqe breeds in file.
+    # Get all unique breeds in file.
     breeds = labels_file["breed"].unique()
     # dictionary of index and name of breed.
     dic_index_breed = {i: name for i, name in enumerate(breeds)}
@@ -25,9 +26,8 @@ def recognize(image, kind):
     json_file.close()
     loaded_model = model_from_json(loaded_model_json)
     model_path_h5 = os.path.join(path, "model.h5")
-    # load weights into new model
+    # load weights into new model.
     loaded_model.load_weights(model_path_h5)
-    # print("Loaded model from disk")
     # read image we get from user and resize it.
     size = 224
     # from bytes to numpy values.
@@ -46,12 +46,16 @@ def recognize(image, kind):
     sum_values = np.sum(three_highest_values)
     precent_array = (three_highest_values / sum_values) * 100
     precent_array_round = np.round_(precent_array, decimals=3)
+    sum_values = np.sum(precent_array_round)
+    # complete to 100 precent and add to the highest value.
+    reminder = 100 - sum_values
+    precent_array_round[0] = precent_array_round[0]+reminder
     # create list of key:name breed and precent as value.
     list_result = {}
     for i in range(3):
         label_idx = three_max_label_idx[i]
         predicted_breed_name = dic_index_breed[label_idx]
         precent = precent_array_round[i]
-        list_result[predicted_breed_name]=str(precent)
+        list_result[predicted_breed_name] = str(precent)
     return list_result
 
